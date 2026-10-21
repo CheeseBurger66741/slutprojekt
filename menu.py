@@ -1,3 +1,5 @@
+from functions.create_user import create_user
+
 
 
 def show_menu(): #Byt ut mot din egna meny

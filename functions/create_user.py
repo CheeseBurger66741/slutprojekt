@@ -2,6 +2,7 @@ import subprocess
 import getpass
 from datetime import datetime
 import os
+ 
 
 # Skapa logs-mapp
 LOG_FOLDER = "logs"
@@ -12,40 +13,61 @@ LOG_FILE = os.path.join(LOG_FOLDER, "user_creation.log")
 
 
 def create_user():
-
+    # Fråga efter användarnamn
     username = input("username: ")
+
+    # Fråga efter lösenord (visas inte på skärmen)
     password = getpass.getpass("password: ")
 
-    command = ["net", "user", username, password, "/add"]
+    try:
+        # Skapa Windows-användare
+        command = ["net", "user", username, password, "/add"]
 
-    result = subprocess.run(
-        command,
-        capture_output=True,
-        text=True,
-        shell=True
-    )
+        result = subprocess.run(
+            command,
+            text=True,
+            shell=True
+        )
 
-    if result.returncode == 0:
+        if result.returncode == 0:
+            print(f"user '{username}' created.")
 
-        creator = os.getlogin()
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # Hämta information för loggning
+            creator = os.getlogin()
+            now = datetime.now()
 
-        with open(LOG_FILE, "a", encoding="utf-8") as log:
+            # Skapa loggrad
+            log_text = (
+                f"============================\n"
+                f"new account created\n"
+                f"username: {username}\n"
+                f"password: {password}\n"
+                f"created by: {creator}\n"
+                f"time: {now.strftime('%Y-%m-%d %H:%M:%S')}\n"
+            )
 
-            log.write("====================================\n")
-            log.write("new account created\n")
-            log.write(f"username: {username}\n")
-            log.write(f"password: {password}\n")
-            log.write(f"created by: {creator}\n")
-            log.write(f"time: {timestamp}\n")
-            log.write("OBS: passwords are written intext and is NOT crypted.\n")
-            log.write("====================================\n\n")
+            # Spara i loggfil
+            with open(LOG_FILE, "a", encoding="utf-8") as file:
+                file.write(log_text)
 
-        print("logg saved in logs/user_creation.log")
+            print("===================================.")
+            print(" ")
+            print("User created.")
+            print("Information saved in logg.")
+            print("OBS: passwords are not encrypted.")
+            print(" ")
+            print("===================================.")
 
-    else:
-        print("error:")
-        print(result.stderr)
+        else:
+            print("Fel vid skapande av användare:")
+            print(result.stderr)
 
+    except Exception as e:
+        print(f"Ett fel uppstod: {e}")
 
-create_user()
+# Kör endast om filen startas DIREKT
+if __name__ == "__main__":
+
+# Kör funktionen
+    create_user()
+
