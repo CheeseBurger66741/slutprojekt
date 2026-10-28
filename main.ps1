@@ -1,5 +1,6 @@
 . "$PSScriptRoot\functions\create_user.ps1"
 . "$PSScriptRoot\functions\install_software.ps1"
+. "$PSScriptRoot\functions\log_base_info.ps1"
 # dvs lägg till flera rader hit liknande den ovan
 
 Write-Host "================================="
@@ -15,7 +16,8 @@ do {
     Write-Host "========== MENU =========="
     Write-Host "1. Create User"
     Write-Host "2. Install software"
-    Write-Host "3. Exit"
+    Write-Host "3. Log Base Info"
+    Write-Host "4. Exit"
     Write-Host "=========================="
 
     $Choice = Read-Host "Select an option"
@@ -31,6 +33,9 @@ do {
         }
 
         "3" {
+            Log-Base-Info -Operator $CurrentOperator 
+        }
+        "4" {
             Write-Host "Exiting program..."
         }
 

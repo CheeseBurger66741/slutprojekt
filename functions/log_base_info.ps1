@@ -1,4 +1,4 @@
-function Log-BaseInfo {
+function Log-Base-Info {
 
     param (
         [string]$Operator
